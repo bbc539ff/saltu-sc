@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/saltu_db
+    username: root
+    password: amlayes
+    driver-class-name: com.mysql.cj.jdbc.Driver
+#  jpa:
+#    properties:
+#      hibernate:
+#        hbm2ddl:
+#          auto: create
+server:
+  port: 9001
+
+snowflake:
+  dataCenterId: 1
+  machineId: 1
