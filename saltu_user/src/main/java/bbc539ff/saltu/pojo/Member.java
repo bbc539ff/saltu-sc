@@ -2,24 +2,34 @@ package bbc539ff.saltu.pojo;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 public class Member implements Serializable {
   @Id private String memberId;
+  @NotBlank(message = "memberName should not be blank")
+  @Size(min = 3, max = 16, message = "memberName between 3-16")
   private String memberName;
+  @NotBlank(message = "memberPassword should not be blank")
+//  @Size(min = 8, max = 16, message = "memberPassword between 8-16")
   private String memberPassword;
+  @Size(min = 11, max = 11, message = "memberPhone equals 11")
   private String memberPhone;
   private String memberEmail;
+  @Min(value = 0, message = "memberFollowing bigger than 0")
   private Long memberFollowing;
+  @Min(value = 0, message = "memberFollowers bigger than 0")
   private Long memberFollowers;
   private Date memberBirthDate;
-  private Date memberCreate;
-  private Date memberUpdate;
   private String memberPic;
   private String memberLocation;
   private String memberWebsite;
+  private Date memberCreate;
+  private Date memberUpdate;
 
   public String getMemberId() {
     return memberId;

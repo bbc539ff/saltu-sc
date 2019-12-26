@@ -15,3 +15,8 @@ server:
 snowflake:
   dataCenterId: 1
   machineId: 1
+
+jwt:
+  config:
+    key: saltu
+    ttl: 3600000

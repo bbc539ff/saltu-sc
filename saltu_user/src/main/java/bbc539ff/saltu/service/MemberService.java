@@ -3,10 +3,14 @@ package bbc539ff.saltu.service;
 import bbc539ff.saltu.dao.MemberDao;
 import bbc539ff.saltu.pojo.Member;
 import bbc539ff.saltu.utils.SnowFlake;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -15,19 +19,18 @@ import java.util.*;
 public class MemberService {
 
   @Autowired private MemberDao memberDao;
-
-  @Value("${snowflake.dataCenterId}")
-  Long dataCenterId;
-
-  @Value("${snowflake.machineId}")
-  Long machineId;
+  @Autowired BCryptPasswordEncoder encoder;
+  @Autowired SnowFlake snowFlake;
+  private static final Logger logger = LoggerFactory.getLogger(MemberService.class);
 
   public List<Member> findAll() {
     return memberDao.findAll();
   }
 
   public void saveOne(Member member) {
-    member.setMemberId(Long.toString(new SnowFlake(dataCenterId, machineId).nextId()));
+    member.setMemberId(Long.toString(snowFlake.nextId()));
+    member.setMemberPassword(encoder.encode(member.getMemberPassword()));
+    logger.info(member.toString());
     memberDao.save(member);
   }
 
@@ -36,6 +39,7 @@ public class MemberService {
   }
 
   public void updateById(Member member) {
+    member.setMemberPassword(encoder.encode(member.getMemberPassword()));
     memberDao.save(member);
   }
 
@@ -43,18 +47,17 @@ public class MemberService {
     return memberDao.findById(memberId).get();
   }
 
-  public Member login(Map<String, String> loginForm) {
+  public Member login(Member member) {
     // Login form data from UA
-    String memberName = loginForm.get("memberName");
-    String memberPassword = loginForm.get("memberPassword");
-    Boolean rememberMe = Boolean.parseBoolean(loginForm.get("rememberMe"));
+    String memberName = member.getMemberName();
+    String memberPassword = member.getMemberPassword();
 
     // Member from DB
-    Member member = memberDao.findByMemberName(memberName);
+    Member memberFromDB = memberDao.findByMemberName(memberName);
 
     // Compare password
-    if (member != null && Objects.equals(member.getMemberPassword(), memberPassword)) {
-      return member;
+    if (memberFromDB != null && encoder.matches(memberPassword, memberFromDB.getMemberPassword())) {
+      return memberFromDB;
     } else {
       return null;
     }
