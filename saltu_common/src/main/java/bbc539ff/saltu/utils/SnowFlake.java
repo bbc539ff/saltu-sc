@@ -1,5 +1,6 @@
 package bbc539ff.saltu.utils;
 
+/** Use SnowFlake algorithm to generate Id */
 public class SnowFlake {
   /** 起始的时间戳 */
   private static final long START_STMP = 1480166465631L;
