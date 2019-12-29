@@ -2,6 +2,7 @@ package bbc539ff.saltu.config;
 
 import bbc539ff.saltu.filter.JWTAuthenticationFilter;
 import bbc539ff.saltu.filter.JWTLoginFilter;
+import bbc539ff.saltu.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Autowired private UserDetailsService userDetailsService;
 
+  @Autowired JwtUtil jwtUtil;
+
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.authorizeRequests()
@@ -30,8 +33,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         //        .rememberMe()
         //        .and()
-        .addFilter(new JWTLoginFilter(authenticationManager()))
-        .addFilter(new JWTAuthenticationFilter(authenticationManager()))
+        .addFilter(new JWTLoginFilter(authenticationManager(), jwtUtil))
+        .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil))
         .csrf()
         .disable();
   }

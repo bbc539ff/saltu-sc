@@ -1,6 +1,8 @@
 package bbc539ff.saltu.utils;
 
 import io.jsonwebtoken.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.Date;
@@ -8,15 +10,17 @@ import java.util.Date;
 @ConfigurationProperties("jwt.config")
 public class JwtUtil {
 
-  private String key;
+  private final static Logger logger = LoggerFactory.getLogger(JwtUtil.class);
+  private String secretKey;
   private Long ttl;
+  private String prefix;
 
-  public String getKey() {
-    return key;
+  public String getSecretKey() {
+    return secretKey;
   }
 
-  public void setKey(String key) {
-    this.key = key;
+  public void setSecretKey(String secretKey) {
+    this.secretKey = secretKey;
   }
 
   public Long getTtl() {
@@ -27,35 +31,48 @@ public class JwtUtil {
     this.ttl = ttl;
   }
 
+  public String getPrefix() {
+    return prefix;
+  }
+
+  public void setPrefix(String prefix) {
+    this.prefix = prefix;
+  }
+
   /**
    * create jwt token
-   * @param id memberId
+   *
    * @param subject memberName
    * @param role user
    * @return jwt token
    */
-  public String createJwt(String id, String subject, String role) {
+  public String createJwt(String subject, String role) {
     long nowMills = System.currentTimeMillis();
     Date now = new Date(nowMills);
-    JwtBuilder jwtBuilder =
+    String token =
         Jwts.builder()
-            .setId(id)
             .setSubject(subject)
             .setIssuedAt(now)
-            .signWith(SignatureAlgorithm.HS256, key)
-            .claim("role", role);
-    if (ttl > 0) {
-      jwtBuilder.setExpiration(new Date(nowMills + ttl));
-    }
-    return jwtBuilder.compact();
+            .setExpiration(new Date(nowMills + ttl))
+            .signWith(SignatureAlgorithm.HS512, secretKey)
+            .claim("role", role)
+            .compact();
+
+    logger.info(token);
+    return prefix + " " + token;
   }
 
   /**
    * parse jwt token
+   *
    * @param token jwt token
    */
   public Claims parseJwt(String token) {
-    Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+    Claims claims =
+        Jwts.parser()
+            .setSigningKey(secretKey)
+            .parseClaimsJws(token.replace(prefix + " ", ""))
+            .getBody();
     return claims;
   }
 }
