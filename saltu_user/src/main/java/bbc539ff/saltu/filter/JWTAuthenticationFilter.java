@@ -2,20 +2,14 @@ package bbc539ff.saltu.filter;
 
 import bbc539ff.saltu.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,7 +50,13 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
 
   /** 解析token中的信息,并判断是否过期 */
   private UsernamePasswordAuthenticationToken getAuthentication(String token) {
-    Claims claims = jwtUtil.parseJwt(token);
+    Claims claims = null;
+    try{
+      claims = jwtUtil.parseJwt(token);
+    }catch (ExpiredJwtException e){
+      e.printStackTrace();
+      return null;
+    }
     // 得到用户名
     String username = claims.getSubject();
 

@@ -19,5 +19,5 @@ snowflake:
 jwt:
   config:
     secretKey: saltu
-    ttl: 7*24*60*60 # 7 days
+    ttl: 604800 # 7 days
     prefix: Bearer

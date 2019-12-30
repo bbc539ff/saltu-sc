@@ -17,23 +17,23 @@ public class UserApplication {
   }
 
   @Bean
-  BCryptPasswordEncoder encoder(){
+  BCryptPasswordEncoder encoder() {
     return new BCryptPasswordEncoder();
   }
 
   @Value("${snowflake.dataCenterId}")
   Long dataCenterId;
+
   @Value("${snowflake.machineId}")
   Long machineId;
 
   @Bean
-  SnowFlake snowFlake(){
+  SnowFlake snowFlake() {
     return new SnowFlake(dataCenterId, machineId);
   }
 
   @Bean
-  JwtUtil jwtUtil(){
+  JwtUtil jwtUtil() {
     return new JwtUtil();
   }
 }
-
