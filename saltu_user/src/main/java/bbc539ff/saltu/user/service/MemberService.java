@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -25,11 +26,22 @@ public class MemberService {
     return memberDao.findAll();
   }
 
-  public void saveOne(Member member) {
+  /**
+   * New member register
+   *
+   * @param member
+   * @return
+   */
+  public Member saveOne(Member member) {
     member.setMemberId(Long.toString(snowFlake.nextId()));
     member.setMemberPassword(encoder.encode(member.getMemberPassword()));
-    logger.info(member.toString());
-    memberDao.save(member);
+    member.setMemberFollowing(new Long(0));
+    member.setMemberFollowers(new Long(0));
+    member.setMemberCreate(new Date());
+    member.setMemberUpdate(new Date());
+    member.setMemberStatus(true);
+    logger.info("Add new member: " + member.toString());
+    return memberDao.save(member);
   }
 
   public void deleteById(String memberId) {
@@ -38,6 +50,7 @@ public class MemberService {
 
   public void updateById(Member member) {
     member.setMemberPassword(encoder.encode(member.getMemberPassword()));
+    member.setMemberUpdate(new Date());
     memberDao.save(member);
   }
 

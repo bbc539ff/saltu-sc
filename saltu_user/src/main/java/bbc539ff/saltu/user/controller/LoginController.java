@@ -16,13 +16,18 @@ import org.springframework.web.bind.annotation.*;
 public class LoginController {
   private final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
-  @Autowired
-  MemberService memberService;
+  @Autowired MemberService memberService;
   @Autowired JwtUtil jwtUtil;
 
   @RequestMapping(path = "/login", method = RequestMethod.POST)
   public Result login(@RequestBody Member member) {
     logger.info(member.toString());
     return Result.failure(ResultCode.DATA_IS_WRONG);
+  }
+
+  @PostMapping("/register")
+  public Result register(@RequestBody Member member){
+    member = memberService.saveOne(member);
+    return Result.success(member);
   }
 }
