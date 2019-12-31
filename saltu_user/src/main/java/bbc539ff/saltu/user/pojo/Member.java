@@ -1,4 +1,4 @@
-package bbc539ff.saltu.pojo;
+package bbc539ff.saltu.user.pojo;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

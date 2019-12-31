@@ -1,4 +1,4 @@
-package bbc539ff.saltu;
+package bbc539ff.saltu.user;
 
 import bbc539ff.saltu.utils.JwtUtil;
 import bbc539ff.saltu.utils.SnowFlake;

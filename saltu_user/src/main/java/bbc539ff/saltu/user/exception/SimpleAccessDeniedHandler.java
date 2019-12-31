@@ -1,5 +1,7 @@
-package bbc539ff.saltu.exception;
+package bbc539ff.saltu.user.exception;
 
+import bbc539ff.saltu.common.exception.Result;
+import bbc539ff.saltu.common.exception.ResultCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;

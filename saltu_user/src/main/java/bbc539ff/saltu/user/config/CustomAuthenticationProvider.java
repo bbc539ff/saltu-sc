@@ -1,4 +1,4 @@
-package bbc539ff.saltu.config;
+package bbc539ff.saltu.user.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

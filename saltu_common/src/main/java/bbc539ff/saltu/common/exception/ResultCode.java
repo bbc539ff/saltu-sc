@@ -1,4 +1,4 @@
-package bbc539ff.saltu.exception;
+package bbc539ff.saltu.common.exception;
 
 import java.util.*;
 

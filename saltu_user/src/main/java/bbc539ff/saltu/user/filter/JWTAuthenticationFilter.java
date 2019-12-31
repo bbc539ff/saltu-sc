@@ -1,4 +1,4 @@
-package bbc539ff.saltu.filter;
+package bbc539ff.saltu.user.filter;
 
 import bbc539ff.saltu.utils.JwtUtil;
 import io.jsonwebtoken.Claims;

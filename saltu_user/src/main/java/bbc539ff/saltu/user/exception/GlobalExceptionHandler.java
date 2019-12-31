@@ -1,5 +1,7 @@
-package bbc539ff.saltu.exception;
+package bbc539ff.saltu.user.exception;
 
+import bbc539ff.saltu.common.exception.Result;
+import bbc539ff.saltu.common.exception.ResultCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

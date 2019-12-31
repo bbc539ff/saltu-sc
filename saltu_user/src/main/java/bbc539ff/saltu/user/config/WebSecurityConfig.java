@@ -1,9 +1,9 @@
-package bbc539ff.saltu.config;
+package bbc539ff.saltu.user.config;
 
-import bbc539ff.saltu.exception.SimpleAccessDeniedHandler;
-import bbc539ff.saltu.exception.SimpleAuthenticationEntryPoint;
-import bbc539ff.saltu.filter.JWTAuthenticationFilter;
-import bbc539ff.saltu.filter.JWTLoginFilter;
+import bbc539ff.saltu.user.exception.SimpleAccessDeniedHandler;
+import bbc539ff.saltu.user.exception.SimpleAuthenticationEntryPoint;
+import bbc539ff.saltu.user.filter.JWTAuthenticationFilter;
+import bbc539ff.saltu.user.filter.JWTLoginFilter;
 import bbc539ff.saltu.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
