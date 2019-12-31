@@ -16,7 +16,6 @@ import java.util.List;
 @Service
 @Transactional
 public class MemberService {
-
   @Autowired private MemberDao memberDao;
   @Autowired BCryptPasswordEncoder encoder;
   @Autowired SnowFlake snowFlake;
@@ -39,13 +38,18 @@ public class MemberService {
     member.setMemberFollowers(new Long(0));
     member.setMemberCreate(new Date());
     member.setMemberUpdate(new Date());
-    member.setMemberStatus(true);
+    member.setMemberStatus(1);
     logger.info("Add new member: " + member.toString());
     return memberDao.save(member);
   }
 
-  public void deleteById(String memberId) {
-    memberDao.deleteById(memberId);
+  /**
+   * Disable Account(Set member_status as 0).
+   *
+   * @param memberId
+   */
+  public void disableById(String memberId) {
+    memberDao.updateMemberStatusByMemberId(memberId, 0);
   }
 
   public void updateById(Member member) {

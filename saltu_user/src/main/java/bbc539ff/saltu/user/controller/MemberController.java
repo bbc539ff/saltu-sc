@@ -15,9 +15,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/user")
 public class MemberController {
-
-  @Autowired
-  MemberService memberService;
+  @Autowired MemberService memberService;
   @Autowired HttpServletRequest request;
 
   private final Logger logger = LoggerFactory.getLogger(MemberController.class);
@@ -34,9 +32,9 @@ public class MemberController {
   }
 
   @RequestMapping(path = "/{memberId}", method = RequestMethod.DELETE)
-  public Result deleteMember(@PathVariable String memberId) {
-    logger.info("memberId: " + memberId);
-    memberService.deleteById(memberId);
+  public Result disableMember(@PathVariable String memberId) {
+    logger.info("Disable memberId: " + memberId);
+    memberService.disableById(memberId);
     return Result.success();
   }
 
