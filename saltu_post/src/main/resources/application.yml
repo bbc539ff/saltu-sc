@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/saltu_db
+    username: root
+    password: amlayes
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+server:
+  port: 9002
+
+snowflake:
+  dataCenterId: 2
+  machineId: 1
+
+jwt:
+  config:
+    secretKey: saltu
+    ttl: 604800 # 7 days
+    prefix: Bearer
