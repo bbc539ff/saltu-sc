@@ -4,6 +4,12 @@ spring:
     username: root
     password: amlayes
     driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    properties:
+      javax:
+        persistence:
+          validation:
+            mode: none
 
 server:
   port: 9002
