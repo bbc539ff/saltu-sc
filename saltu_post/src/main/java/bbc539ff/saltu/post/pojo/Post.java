@@ -3,6 +3,7 @@ package bbc539ff.saltu.post.pojo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,6 +16,7 @@ import java.util.Date;
 public class Post {
   @Id private String postId;
   private String memberId;
+  @Length(max = 200, message = "postContent should be less than 200 characters")
   private String postContent;
   private Date postDate;
   private String postOriginal;
