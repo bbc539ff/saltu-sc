@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
@@ -24,12 +25,15 @@ public class Member implements Serializable {
   private String memberName;
 
   @NotBlank
-  //  @Size(min = 8, max = 16, message = "memberPassword between 8-16")
+  @Size(min = 8, max = 16, message = "memberPassword between 8-16")
   private String memberPassword;
 
-  @Size(min = 11, max = 11, message = "memberPhone equals 11")
+  @Size(min = 11, max = 11, message = "memberPhone length should equals 11")
   private String memberPhone;
 
+  @Pattern(
+      regexp = "^\\s*\\w+(?:\\.{0,1}[\\w-]+)*@[a-zA-Z0-9]+(?:[-.][a-zA-Z0-9]+)*\\.[a-zA-Z]+\\s*$",
+      message = "memberEmail illegal")
   private String memberEmail;
 
   @Min(value = 0, message = "memberFollowing bigger than 0")

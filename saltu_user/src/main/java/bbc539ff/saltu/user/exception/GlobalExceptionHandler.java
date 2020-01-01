@@ -5,19 +5,19 @@ import bbc539ff.saltu.common.exception.ResultCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
 
 @RestControllerAdvice
 @RestController
 public class GlobalExceptionHandler {
   private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-  @ExceptionHandler(value = Exception.class)
+  @ExceptionHandler(value = ConstraintViolationException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public Result ExceptionHandler(HttpServletRequest req, Exception e) {
-    e.printStackTrace();
-    logger.error("发生业务异常！原因是：");
-    return Result.failure(ResultCode.SYSTEM_INNER_ERROR);
+  public Result ConstraintViolationExceptionHandler(HttpServletRequest request, Errors errors) {
+    return Result.failure(ResultCode.SYSTEM_INNER_ERROR, errors.getAllErrors());
   }
 }
