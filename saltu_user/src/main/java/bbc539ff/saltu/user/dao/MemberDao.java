@@ -13,6 +13,6 @@ public interface MemberDao extends JpaRepository<Member, String>, JpaSpecificati
   Member findByMemberName(String memberName);
 
   @Modifying
-  @Query("UPDATE Member SET memberStatus = ?2 WHERE memberId = ?1")
-  void updateMemberStatusByMemberId(String memberId, Integer memberStatus);
+  @Query("UPDATE Member SET memberState = ?2 WHERE memberId = ?1")
+  void updateMemberStateByMemberId(String memberId, Integer memberState);
 }

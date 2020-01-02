@@ -1,6 +1,6 @@
 package bbc539ff.saltu.user.filter;
 
-import bbc539ff.saltu.utils.JwtUtil;
+import bbc539ff.saltu.common.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;

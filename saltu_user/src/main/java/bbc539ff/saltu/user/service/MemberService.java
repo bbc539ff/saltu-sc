@@ -1,8 +1,8 @@
 package bbc539ff.saltu.user.service;
 
+import bbc539ff.saltu.common.utils.SnowFlake;
 import bbc539ff.saltu.user.dao.MemberDao;
 import bbc539ff.saltu.user.pojo.Member;
-import bbc539ff.saltu.utils.SnowFlake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,8 @@ import java.util.List;
 public class MemberService {
   @Autowired private MemberDao memberDao;
   @Autowired BCryptPasswordEncoder encoder;
-  @Autowired SnowFlake snowFlake;
+  @Autowired
+  SnowFlake snowFlake;
   private static final Logger logger = LoggerFactory.getLogger(MemberService.class);
 
   public List<Member> findAll() {
@@ -38,7 +39,7 @@ public class MemberService {
     member.setMemberFollowers(new Long(0));
     member.setMemberCreate(new Date());
     member.setMemberUpdate(new Date());
-    member.setMemberStatus(1);
+    member.setMemberState(1);
     logger.info("Add new member: " + member.toString());
     return memberDao.save(member);
   }
@@ -49,7 +50,7 @@ public class MemberService {
    * @param memberId
    */
   public void disableById(String memberId) {
-    memberDao.updateMemberStatusByMemberId(memberId, 0);
+    memberDao.updateMemberStateByMemberId(memberId, 0);
   }
 
   public void updateById(Member member) {

@@ -46,7 +46,7 @@ public class Member implements Serializable {
   private String memberPic;
   private String memberLocation;
   private String memberWebsite;
-  private Integer memberStatus;
+  private Integer memberState;
   private Date memberCreate;
   private Date memberUpdate;
 }

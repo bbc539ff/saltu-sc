@@ -1,7 +1,7 @@
 package bbc539ff.saltu.user;
 
-import bbc539ff.saltu.utils.JwtUtil;
-import bbc539ff.saltu.utils.SnowFlake;
+import bbc539ff.saltu.common.utils.JwtUtil;
+import bbc539ff.saltu.common.utils.SnowFlake;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

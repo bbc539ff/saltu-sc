@@ -2,9 +2,9 @@ package bbc539ff.saltu.user.controller;
 
 import bbc539ff.saltu.common.exception.Result;
 import bbc539ff.saltu.common.exception.ResultCode;
+import bbc539ff.saltu.common.utils.JwtUtil;
 import bbc539ff.saltu.user.pojo.Member;
 import bbc539ff.saltu.user.service.MemberService;
-import bbc539ff.saltu.utils.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,8 @@ public class LoginController {
   private final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
   @Autowired MemberService memberService;
-  @Autowired JwtUtil jwtUtil;
+  @Autowired
+  JwtUtil jwtUtil;
 
   @RequestMapping(path = "/login", method = RequestMethod.POST)
   public Result login(@RequestBody @Valid Member member) {

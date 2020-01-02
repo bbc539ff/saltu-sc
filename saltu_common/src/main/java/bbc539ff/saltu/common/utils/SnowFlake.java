@@ -1,4 +1,4 @@
-package bbc539ff.saltu.utils;
+package bbc539ff.saltu.common.utils;
 
 /** Use SnowFlake algorithm to generate Id */
 public class SnowFlake {

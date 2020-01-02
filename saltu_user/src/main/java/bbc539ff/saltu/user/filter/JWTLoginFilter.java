@@ -1,6 +1,6 @@
 package bbc539ff.saltu.user.filter;
 
-import bbc539ff.saltu.utils.JwtUtil;
+import bbc539ff.saltu.common.utils.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;

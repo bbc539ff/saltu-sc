@@ -1,4 +1,4 @@
-package bbc539ff.saltu.utils;
+package bbc539ff.saltu.common.utils;
 
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
