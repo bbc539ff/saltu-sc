@@ -3,6 +3,7 @@ package bbc539ff.saltu.user.pojo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -17,6 +18,7 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class Member implements Serializable {
   @Id private String memberId;
 
@@ -49,4 +51,9 @@ public class Member implements Serializable {
   private Integer memberState;
   private Date memberCreate;
   private Date memberUpdate;
+
+  public Member(String memberName, String memberPassword) {
+    this.memberName = memberName;
+    this.memberPassword = memberPassword;
+  }
 }

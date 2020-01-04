@@ -3,6 +3,7 @@ package bbc539ff.saltu.post.pojo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 public class Post {
   @Id private String postId;
@@ -21,6 +23,7 @@ public class Post {
   private Date postDate;
   private String postOriginal;
   private String postRepostId;
+  private String postState;
   private String postPic1;
   private String postPic2;
   private String postPic3;

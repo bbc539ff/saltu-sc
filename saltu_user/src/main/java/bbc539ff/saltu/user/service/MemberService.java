@@ -63,6 +63,10 @@ public class MemberService {
     return memberDao.findById(memberId).get();
   }
 
+  public Member findByMemberName(String memberName){
+    return memberDao.findByMemberName(memberName);
+  }
+
   public Member login(Member member) {
     // Login form data from UA
     String memberName = member.getMemberName();

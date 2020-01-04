@@ -12,6 +12,8 @@
         <module>saltu_common</module>
         <module>saltu_user</module>
         <module>saltu_post</module>
+        <module>saltu_eureka</module>
+        <module>saltu_eureka</module>
     </modules>
 
     <parent>
@@ -55,5 +57,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

@@ -10,7 +10,7 @@ import java.util.Date;
 @ConfigurationProperties("jwt.config")
 public class JwtUtil {
 
-  private final static Logger logger = LoggerFactory.getLogger(JwtUtil.class);
+  private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
   private String secretKey;
   private Long ttl;
   private String prefix;
@@ -46,11 +46,12 @@ public class JwtUtil {
    * @param role user
    * @return jwt token
    */
-  public String createJwt(String subject, String role) {
+  public String createJwt(String id, String subject, String role) {
     long nowMills = System.currentTimeMillis();
     Date now = new Date(nowMills);
     String token =
         Jwts.builder()
+            .setId(id)
             .setSubject(subject)
             .setIssuedAt(now)
             .setExpiration(new Date(nowMills + ttl))

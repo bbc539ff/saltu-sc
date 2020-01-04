@@ -5,6 +5,7 @@ import bbc539ff.saltu.user.exception.SimpleAccessDeniedHandler;
 import bbc539ff.saltu.user.exception.SimpleAuthenticationEntryPoint;
 import bbc539ff.saltu.user.filter.JWTAuthenticationFilter;
 import bbc539ff.saltu.user.filter.JWTLoginFilter;
+import bbc539ff.saltu.user.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,14 +31,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.authorizeRequests()
-        .antMatchers("/login", "/", "/register")
+        .antMatchers("/", "/register")
         .permitAll()
         .anyRequest()
         .authenticated()
         .and()
         //        .rememberMe()
         //        .and()
-        .addFilter(new JWTLoginFilter(authenticationManager(), jwtUtil))
+        .addFilter(new JWTLoginFilter(authenticationManager(), jwtUtil, memberService))
         .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil))
         // Disabled CSRF
         .csrf()
@@ -48,10 +49,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .accessDeniedHandler(new SimpleAccessDeniedHandler());
   }
 
+  @Autowired
+  MemberService memberService;
   @Override
-  protected void configure(AuthenticationManagerBuilder auth) {
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
     auth.authenticationProvider(
-        new CustomAuthenticationProvider(userDetailsService, bCryptPasswordEncoder));
+        new CustomAuthenticationProvider(memberService));
   }
 
   @Bean
