@@ -10,10 +10,10 @@ import java.util.List;
 
 @Repository
 public interface PostDao extends JpaRepository<Post, String> {
-    @Query("SELECT p FROM Post WHERE memberId = ?1")
-    List<Post> findByMemberId(String memberId);
-
     @Modifying
     @Query("UPDATE Post SET postState = ?2 WHERE postId = ?1")
     void updateState(String postId, Integer postState);
+
+    @Query("SELECT p FROM Post p WHERE p.memberId = ?1")
+    List<Post> findAllByMemberId(String memberId);
 }

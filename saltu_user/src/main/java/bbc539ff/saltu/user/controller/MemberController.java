@@ -13,16 +13,32 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/member")
 public class MemberController {
   @Autowired MemberService memberService;
   @Autowired HttpServletRequest request;
 
   private final Logger logger = LoggerFactory.getLogger(MemberController.class);
 
+  /**
+   * Get all member(Admin).
+   * @return
+   */
   @RequestMapping("")
-  public List<Member> findAll() {
-    return memberService.findAll();
+  public Result findAll() {
+    List<Member> memberList = memberService.findAll();
+    return Result.success(memberList);
+  }
+
+  /**
+   * Get member detail.
+   * @param memberId
+   * @return
+   */
+  @GetMapping("/{memberId}")
+  public Result findByMemberId(@PathVariable String memberId) {
+    Member member = memberService.findById(memberId);
+    return Result.success(member);
   }
 
   @RequestMapping(path = "", method = RequestMethod.POST)

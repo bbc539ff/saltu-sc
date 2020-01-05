@@ -1,6 +1,7 @@
 package bbc539ff.saltu.post.controller;
 
 import bbc539ff.saltu.common.exception.Result;
+import bbc539ff.saltu.common.exception.ResultCode;
 import bbc539ff.saltu.common.utils.JwtUtil;
 import bbc539ff.saltu.post.pojo.Post;
 import bbc539ff.saltu.post.service.PostService;
@@ -21,7 +22,11 @@ public class PostController {
   @PostMapping("")
   Result addPost(@RequestBody Post post) {
     post = postService.addPost(post);
-    return Result.success(post);
+    if (post != null) {
+      return Result.success(post);
+    } else {
+      return Result.failure(ResultCode.SYSTEM_INNER_ERROR);
+    }
   }
 
   @GetMapping("/{postId}")
@@ -30,12 +35,12 @@ public class PostController {
     return Result.success(post);
   }
 
-  @GetMapping("")
+  @GetMapping("/")
   Result getPost() {
     String token = request.getHeader("token");
     Claims claims = jwtUtil.parseJwt(token);
     String memberId = claims.getId();
-    List<Post> postList = postService.getPostByMemberId(memberId);
+    List<Post> postList = postService.getPostByMemberId(memberId, request.getHeader("token"));
     return Result.success(postList);
   }
 
