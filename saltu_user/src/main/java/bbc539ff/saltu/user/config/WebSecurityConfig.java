@@ -9,6 +9,7 @@ import bbc539ff.saltu.user.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -28,17 +29,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Autowired JwtUtil jwtUtil;
 
+  @Autowired MemberService memberService;
+
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.authorizeRequests()
-        .antMatchers("/", "/register")
+        .antMatchers("/register")
         .permitAll()
         .anyRequest()
         .authenticated()
         .and()
         //        .rememberMe()
         //        .and()
-        .addFilter(new JWTLoginFilter(authenticationManager(), jwtUtil, memberService))
+        .addFilter(new JWTLoginFilter(authenticationManager(), jwtUtil))
         .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil))
         // Disabled CSRF
         .csrf()
@@ -49,17 +52,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .accessDeniedHandler(new SimpleAccessDeniedHandler());
   }
 
-  @Autowired
-  MemberService memberService;
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.authenticationProvider(
-        new CustomAuthenticationProvider(memberService));
+    auth.authenticationProvider(new CustomAuthenticationProvider(memberService));
   }
 
   @Bean
   @Override
   public UserDetailsService userDetailsServiceBean() throws Exception {
     return super.userDetailsServiceBean();
+  }
+
+
+  @Bean
+  @Override
+  protected AuthenticationManager authenticationManager() throws Exception {
+    return super.authenticationManager();
   }
 }

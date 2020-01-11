@@ -24,7 +24,7 @@ public class SimpleAccessDeniedHandler implements AccessDeniedHandler {
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     ObjectMapper objectMapper = new ObjectMapper();
     String resBody =
-        objectMapper.writeValueAsString(Result.failure(ResultCode.PERMISSION_NO_ACCESS));
+        objectMapper.writeValueAsString(Result.failure(ResultCode.PERMISSION_NO_ACCESS, "SimpleAccessDeniedHandler"));
     PrintWriter printWriter = response.getWriter();
     printWriter.print(resBody);
     printWriter.flush();

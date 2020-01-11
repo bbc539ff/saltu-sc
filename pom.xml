@@ -13,7 +13,9 @@
         <module>saltu_user</module>
         <module>saltu_post</module>
         <module>saltu_eureka</module>
-        <module>saltu_eureka</module>
+        <module>saltu_zuul</module>
+        <module>saltu_oauth</module>
+        <module>aouth_server</module>
     </modules>
 
     <parent>

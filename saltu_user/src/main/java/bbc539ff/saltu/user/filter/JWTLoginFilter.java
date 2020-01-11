@@ -3,6 +3,7 @@ package bbc539ff.saltu.user.filter;
 import bbc539ff.saltu.common.utils.JwtUtil;
 import bbc539ff.saltu.user.pojo.Member;
 import bbc539ff.saltu.user.service.MemberService;
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,10 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
 
   private AuthenticationManager authenticationManager;
   private JwtUtil jwtUtil;
-  private MemberService memberService;
 
-  public JWTLoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, MemberService memberService) {
+  public JWTLoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
     this.authenticationManager = authenticationManager;
     this.jwtUtil = jwtUtil;
-    this.memberService = memberService;
   }
 
   @Override
@@ -66,7 +65,8 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
       FilterChain chain,
       Authentication authResult) {
 
-    String token = jwtUtil.createJwt(memberService.findByMemberName(authResult.getName()).getMemberId(), authResult.getName(), "MEMBER");
+    Map<String, String> map = (Map<String, String>)JSON.parse(authResult.getName());
+    String token = jwtUtil.createJwt(map.get("memberId"), map.get("memberName"), "MEMBER");
     response.addHeader("token", token);
   }
 }

@@ -24,13 +24,12 @@ public class LoginController {
   private final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
   @Autowired MemberService memberService;
-  @Autowired
-  JwtUtil jwtUtil;
+  @Autowired JwtUtil jwtUtil;
 
   @RequestMapping(path = "/login", method = RequestMethod.POST)
   public Result login(@RequestBody @Valid Member member) {
     logger.info(member.toString());
-    return Result.failure(ResultCode.DATA_IS_WRONG);
+    return Result.failure(ResultCode.DATA_IS_WRONG, "LoginController");
   }
 
   @PostMapping("/register")

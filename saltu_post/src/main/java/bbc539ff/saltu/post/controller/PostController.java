@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/post")
@@ -35,9 +36,10 @@ public class PostController {
     return Result.success(post);
   }
 
-  @GetMapping("/")
+  @GetMapping("")
   Result getPost() {
     String token = request.getHeader("token");
+    if(token == null || Objects.equals(token, "")) return Result.failure(ResultCode.PERMISSION_NO_ACCESS);
     Claims claims = jwtUtil.parseJwt(token);
     String memberId = claims.getId();
     List<Post> postList = postService.getPostByMemberId(memberId, request.getHeader("token"));

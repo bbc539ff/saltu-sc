@@ -20,7 +20,7 @@ public class SimpleAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setCharacterEncoding("utf-8");
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         ObjectMapper objectMapper = new ObjectMapper();
-        String resBody = objectMapper.writeValueAsString(Result.failure(ResultCode.PERMISSION_NO_ACCESS));
+        String resBody = objectMapper.writeValueAsString(Result.failure(ResultCode.PERMISSION_NO_ACCESS, "SimpleAuthenticationEntryPoint"));
         PrintWriter printWriter = response.getWriter();
         printWriter.print(resBody);
         printWriter.flush();

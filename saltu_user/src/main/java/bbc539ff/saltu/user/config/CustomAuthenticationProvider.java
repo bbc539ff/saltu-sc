@@ -2,13 +2,16 @@ package bbc539ff.saltu.user.config;
 
 import bbc539ff.saltu.user.pojo.Member;
 import bbc539ff.saltu.user.service.MemberService;
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
@@ -28,10 +31,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     Member member = new Member(username, password);
     logger.info(member.toString());
-    member = memberService.login(member);
-    logger.info(member.toString());
-    if(member == null) throw new RuntimeException("验证失败");
-    Authentication auth = new UsernamePasswordAuthenticationToken(username, password);
+    Member memberDB = memberService.login(member);
+    logger.info(memberDB.toString());
+    if(memberDB == null) throw new RuntimeException("验证失败");
+    Map<String, String> map = new HashMap<>();
+    map.put("memberId", memberDB.getMemberId());
+    map.put("memberName", memberDB.getMemberName());
+    String mapJSON = JSON.toJSONString(map);
+    Authentication auth = new UsernamePasswordAuthenticationToken(mapJSON, password);
 
     return auth;
   }
