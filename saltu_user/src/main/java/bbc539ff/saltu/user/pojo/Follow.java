@@ -3,6 +3,7 @@ package bbc539ff.saltu.user.pojo;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 @Getter
@@ -13,14 +14,11 @@ import java.io.Serializable;
 @Entity
 @IdClass(Follow.PK.class)
 public class Follow implements Serializable {
-  @Id private String memberId;
-  @Id private String followingId;
+  @Id @NotBlank private String memberId;
+  @Id @NotBlank private String followingId;
 
   public PK getId() {
-    return new PK(
-            memberId,
-            followingId
-    );
+    return new PK(memberId, followingId);
   }
 
   public void setId(PK id) {
