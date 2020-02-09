@@ -23,6 +23,8 @@ public class Post {
   private Date postDate;
   private String postOriginal;
   private String postRepostId;
+  private String postRepostNumber;
+  private String postCommentNumber;
   private String postState;
   private String postPic1;
   private String postPic2;
