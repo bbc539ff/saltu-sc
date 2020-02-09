@@ -19,7 +19,6 @@ import java.util.Iterator;
 import java.util.List;
 
 @RestController
-@CrossOrigin
 public class LoginController {
   private final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
