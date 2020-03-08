@@ -18,8 +18,8 @@ import java.util.List;
 public class MemberService {
   @Autowired private MemberDao memberDao;
   @Autowired BCryptPasswordEncoder encoder;
-  @Autowired
-  SnowFlake snowFlake;
+  @Autowired SnowFlake snowFlake;
+  @Autowired MemberRedisService memberRedisService;
   private static final Logger logger = LoggerFactory.getLogger(MemberService.class);
 
   public List<Member> findAll() {
@@ -41,6 +41,7 @@ public class MemberService {
     member.setMemberUpdate(new Date());
     member.setMemberState(1);
     logger.info("Add new member: " + member.toString());
+    memberRedisService.addMemberToRedis(member);
     return memberDao.save(member);
   }
 
@@ -56,6 +57,7 @@ public class MemberService {
   public void updateById(Member member) {
     member.setMemberPassword(encoder.encode(member.getMemberPassword()));
     member.setMemberUpdate(new Date());
+    memberRedisService.addMemberToRedis(member);
     memberDao.save(member);
   }
 
@@ -63,8 +65,10 @@ public class MemberService {
     return memberDao.findById(memberId).get();
   }
 
-  public Member findByMemberName(String memberName){
-    return memberDao.findByMemberName(memberName);
+  public Member findByMemberName(String memberName) {
+    Member member = memberDao.findByMemberName(memberName);
+    member.setMemberPassword(null);
+    return member;
   }
 
   public Member login(Member member) {
@@ -77,6 +81,13 @@ public class MemberService {
 
     // Compare password
     if (memberFromDB != null && encoder.matches(memberPassword, memberFromDB.getMemberPassword())) {
+      // Refresh lastLogin in redis.
+      memberRedisService.redisTemplate
+          .opsForHash()
+          .put(
+              "member: " + member.getMemberId(),
+              "LastLogin",
+              Long.toString(System.currentTimeMillis()));
       return memberFromDB;
     } else {
       return null;

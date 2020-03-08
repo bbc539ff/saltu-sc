@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -16,6 +17,7 @@ import java.io.Serializable;
 public class Follow implements Serializable {
   @Id @NotBlank private String memberId;
   @Id @NotBlank private String followingId;
+  private Date followingTime;
 
   public PK getId() {
     return new PK(memberId, followingId);

@@ -5,9 +5,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
@@ -15,17 +17,19 @@ import java.util.Date;
 @Setter
 @ToString
 @NoArgsConstructor
-public class Post {
-  @Id private String postId;
+public class Post implements Serializable {
+  @Id
+  private String postId;
   private String memberId;
   @Length(max = 200, message = "postContent should be less than 200 characters")
   private String postContent;
   private Date postDate;
   private String postOriginal;
   private String postRepostId;
-  private String postRepostNumber;
-  private String postCommentNumber;
-  private String postState;
+  private Integer postRepostNumber;
+  private Integer postCommentNumber;
+  private Integer postLikeNumber;
+  private Integer postState;
   private String postPic1;
   private String postPic2;
   private String postPic3;

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @RestController
@@ -56,5 +57,17 @@ public class PostController {
   Result disablePost(String postId) {
     postService.disablePost(postId, 0);
     return Result.success();
+  }
+
+  @GetMapping(path = "/timeline/{memberId}")
+  Result getHomeTimeline(String memberId){
+    List<Map<String, Object>> list = postService.getTimelineFromRedis(memberId);
+    return Result.success(list);
+  }
+
+  @GetMapping(path = "/profile/{memberId}")
+  Result getProfileTimeline(String memberId){
+    List<Map<String, Object>> list = postService.getProfileFromRedis(memberId);
+    return Result.success(list);
   }
 }

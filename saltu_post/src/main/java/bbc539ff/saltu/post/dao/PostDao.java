@@ -1,6 +1,7 @@
 package bbc539ff.saltu.post.dao;
 
 import bbc539ff.saltu.post.pojo.Post;
+import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
