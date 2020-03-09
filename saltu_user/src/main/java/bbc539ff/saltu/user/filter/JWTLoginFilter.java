@@ -1,5 +1,6 @@
 package bbc539ff.saltu.user.filter;
 
+import bbc539ff.saltu.common.exception.Result;
 import bbc539ff.saltu.common.utils.JwtUtil;
 import bbc539ff.saltu.user.pojo.Member;
 import bbc539ff.saltu.user.service.MemberService;
@@ -16,6 +17,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -63,10 +67,19 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
       HttpServletRequest request,
       HttpServletResponse response,
       FilterChain chain,
-      Authentication authResult) {
+      Authentication authResult) throws IOException {
 
     Map<String, String> map = (Map<String, String>)JSON.parse(authResult.getName());
     String token = jwtUtil.createJwt(map.get("memberId"), map.get("memberName"), "MEMBER");
+
     response.addHeader("token", token);
+    PrintWriter printWriter = response.getWriter();
+    Map<String, String> msgMap = new HashMap<>();
+    msgMap.put("memberName", map.get("memberName"));
+    msgMap.put("memberId", map.get("memberId"));
+    ObjectMapper objectMapper = new ObjectMapper();
+    printWriter.write(objectMapper.writeValueAsString(Result.success(msgMap)));
+    printWriter.flush();
+    printWriter.close();
   }
 }

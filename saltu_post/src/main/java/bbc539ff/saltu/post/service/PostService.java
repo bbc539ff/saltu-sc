@@ -23,6 +23,22 @@ public class PostService {
   public Post addPost(Post post) {
     post.setPostId(Long.toString(snowFlake.nextId()));
     post.setPostDate(new Date());
+    post.setPostOriginal("");
+    post.setPostRepostId("");
+    post.setPostRepostNumber(0);
+    post.setPostLikeNumber(0);
+    post.setPostCommentNumber(0);
+    post.setPostState(1);
+    post.setPostPic1("");
+    post.setPostPic2("");
+    post.setPostPic3("");
+    post.setPostPic4("");
+    post.setPostPic5("");
+    post.setPostPic6("");
+    post.setPostPic7("");
+    post.setPostPic8("");
+    post.setPostPic9("");
+
     postRedisService.addPostToRedis(post);
     return postDao.save(post);
   }

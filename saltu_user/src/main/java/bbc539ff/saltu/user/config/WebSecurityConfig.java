@@ -56,7 +56,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // Handle exception.
         .exceptionHandling()
         .authenticationEntryPoint(new SimpleAuthenticationEntryPoint())
-        .accessDeniedHandler(new SimpleAccessDeniedHandler());
+        .accessDeniedHandler(new SimpleAccessDeniedHandler())
+    .and().formLogin().successHandler(new LoginAuthenticationSuccessHandler());
   }
 
   @Override

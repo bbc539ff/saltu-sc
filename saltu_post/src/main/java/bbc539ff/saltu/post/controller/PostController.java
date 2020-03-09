@@ -54,19 +54,20 @@ public class PostController {
   }
 
   @DeleteMapping(path = "/{postId}")
-  Result disablePost(String postId) {
+  Result disablePost(@PathVariable String postId) {
     postService.disablePost(postId, 0);
     return Result.success();
   }
 
   @GetMapping(path = "/timeline/{memberId}")
-  Result getHomeTimeline(String memberId){
+  Result getHomeTimeline(@PathVariable String memberId){
     List<Map<String, Object>> list = postService.getTimelineFromRedis(memberId);
+    System.out.println(list);
     return Result.success(list);
   }
 
   @GetMapping(path = "/profile/{memberId}")
-  Result getProfileTimeline(String memberId){
+  Result getProfileTimeline(@PathVariable String memberId){
     List<Map<String, Object>> list = postService.getProfileFromRedis(memberId);
     return Result.success(list);
   }

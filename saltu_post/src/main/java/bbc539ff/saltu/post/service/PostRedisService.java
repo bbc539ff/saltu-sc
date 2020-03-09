@@ -67,8 +67,10 @@ public class PostRedisService {
               StringRedisConnection stringRedisConnection = (StringRedisConnection) connection;
               addOnePost(stringRedisConnection, post);
               // Add postId to profile: memberId zSet.
+              long nowTime = System.currentTimeMillis();
               stringRedisConnection.zAdd(
-                  "profile:" + post.getMemberId(), System.currentTimeMillis(), post.getPostId());
+                  "profile:" + post.getMemberId(), nowTime, post.getPostId());
+              stringRedisConnection.zAdd("home:" + post.getMemberId(), nowTime, post.getPostId());
               // Add postId to home: followerId zSet.
               Set<String> followerSet =
                   redisTemplate
@@ -82,54 +84,55 @@ public class PostRedisService {
               System.out.println("follower:" + post.getMemberId() + followerSet);
               if (followerSet != null) {
                 for (String followerId : followerSet) {
-                  stringRedisConnection.zAdd(
-                      "home:" + followerId, System.currentTimeMillis(), post.getPostId());
+                  stringRedisConnection.zAdd("home:" + followerId, nowTime, post.getPostId());
                 }
               }
               return null;
             });
   }
 
-    public List<Map<String, Object>> getPostFromRedis(Set<String> postSet) {
-        // Get post object.
-        List<Object> result =  redisTemplate.executePipelined(
-                (RedisCallback<Object>)
-                        connection -> {
-                            StringRedisConnection stringRedisConnection = (StringRedisConnection) connection;
-                            if (postSet != null) {
-                                for (String postId : postSet) {
-                                    stringRedisConnection.hGetAll("post:" + postId);
-                                }
-                            }
-                            return null;
-                        });
-        List<Map<String, Object>> postList = (List)result;
+  public List<Map<String, Object>> getPostFromRedis(Set<String> postSet) {
+    // Get post object.
+    List<Object> result =
+        redisTemplate.executePipelined(
+            (RedisCallback<Object>)
+                connection -> {
+                  StringRedisConnection stringRedisConnection = (StringRedisConnection) connection;
+                  if (postSet != null) {
+                    for (String postId : postSet) {
+                      stringRedisConnection.hGetAll("post:" + postId);
+                    }
+                  }
+                  return null;
+                });
+    List<Map<String, Object>> postList = (List) result;
 
-        // Get member Object.
-        result =  redisTemplate.executePipelined(
-                (RedisCallback<Object>)
-                        connection -> {
-                            StringRedisConnection stringRedisConnection = (StringRedisConnection) connection;
-                            for(int i = 0;i<postList.size();i++) {
-                                Map<String, Object> map = postList.get(i);
-                                String memberId = (String)map.get("memberId");
-                                stringRedisConnection.hGetAll("member:"+memberId);
-                            }
-                            return null;
-                        });
-        List<Map<String, Object>> memberList = (List)result;
-        for(int i = 0;i<postList.size();i++) {
-            Map<String, Object> map = postList.get(i);
-            map.put("member", memberList.get(i));
-        }
-        return postList;
+    // Get member Object.
+    result =
+        redisTemplate.executePipelined(
+            (RedisCallback<Object>)
+                connection -> {
+                  StringRedisConnection stringRedisConnection = (StringRedisConnection) connection;
+                  for (int i = 0; i < postList.size(); i++) {
+                    Map<String, Object> map = postList.get(i);
+                    String memberId = (String) map.get("memberId");
+                    stringRedisConnection.hGetAll("member:" + memberId);
+                  }
+                  return null;
+                });
+    List<Map<String, Object>> memberList = (List) result;
+    for (int i = 0; i < postList.size(); i++) {
+      Map<String, Object> map = postList.get(i);
+      map.put("member", memberList.get(i));
     }
+    return postList;
+  }
 
   public List<Map<String, Object>> getTimelineFromRedis(String memberId) {
     Set<String> postSet =
         redisTemplate
             .opsForZSet()
-            .rangeByScore(
+            .reverseRangeByScore(
                 "home:" + memberId, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 0, 10);
     return getPostFromRedis(postSet);
   }
@@ -138,10 +141,10 @@ public class PostRedisService {
     Set<String> postSet =
         redisTemplate
             .opsForZSet()
-            .rangeByScore(
+            .reverseRangeByScore(
                 "profile:" + memberId, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 0, 10);
 
-      return getPostFromRedis(postSet);
+    return getPostFromRedis(postSet);
   }
 
   public void loadingPostDataFromDatabase() {
@@ -151,18 +154,19 @@ public class PostRedisService {
     }
   }
 
-    public List<Object> getMemberFromRedis(Set<String> memberSet) {
-        List<Object> result = redisTemplate.executePipelined(
-                (RedisCallback<Object>)
-                        connection -> {
-                            StringRedisConnection stringRedisConnection = (StringRedisConnection) connection;
-                            if (memberSet != null) {
-                                for (String memberId : memberSet) {
-                                    stringRedisConnection.hGetAll("member:" + memberId);
-                                }
-                            }
-                            return null;
-                        });
-        return result;
-    }
+  public List<Object> getMemberFromRedis(Set<String> memberSet) {
+    List<Object> result =
+        redisTemplate.executePipelined(
+            (RedisCallback<Object>)
+                connection -> {
+                  StringRedisConnection stringRedisConnection = (StringRedisConnection) connection;
+                  if (memberSet != null) {
+                    for (String memberId : memberSet) {
+                      stringRedisConnection.hGetAll("member:" + memberId);
+                    }
+                  }
+                  return null;
+                });
+    return result;
+  }
 }
