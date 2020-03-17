@@ -31,4 +31,9 @@ public class PostRedisServiceTest {
             System.out.println(map);
         }
     }
+
+    @Test
+    public void deletePostFromRedis() {
+      postRedisService.deletePostFromRedis("435620398806339584");
+    }
 }

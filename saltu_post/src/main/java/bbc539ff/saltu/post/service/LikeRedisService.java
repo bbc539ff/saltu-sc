@@ -19,7 +19,7 @@ public class LikeRedisService {
   @Autowired PostRedisService postRedisService;
 
   public void likeOnePost(StringRedisConnection stringRedisConnection, LikePost likePost) {
-    if (stringRedisConnection.zScore("ILike:" + likePost.getMemberId(), likePost.getPostId())
+    if (redisTemplate.opsForZSet().score("ILike:" + likePost.getMemberId(), likePost.getPostId())
         != null) return;
     stringRedisConnection.hIncrBy("post:" + likePost.getPostId(), "postLikeNumber", 1);
     stringRedisConnection.zAdd(
@@ -29,7 +29,7 @@ public class LikeRedisService {
   }
 
   public void unLikeOnePost(StringRedisConnection stringRedisConnection, LikePost likePost) {
-    if (stringRedisConnection.zScore("ILike:" + likePost.getMemberId(), likePost.getPostId())
+    if (redisTemplate.opsForZSet().score("ILike:" + likePost.getMemberId(), likePost.getPostId())
         == null) return;
     stringRedisConnection.hIncrBy("post:" + likePost.getPostId(), "postLikeNumber", -1);
     stringRedisConnection.zRem("ILike:" + likePost.getMemberId(), likePost.getPostId());
@@ -60,7 +60,7 @@ public class LikeRedisService {
     Set<String> set =
         redisTemplate
             .opsForZSet()
-            .rangeByScore("ILike:" + memberId, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+            .reverseRangeByScore("ILike:" + memberId, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
     return postRedisService.getPostFromRedis(set);
   }
 
@@ -68,7 +68,7 @@ public class LikeRedisService {
     Set<String> set =
         redisTemplate
             .opsForZSet()
-            .rangeByScore(
+            .reverseRangeByScore(
                 "PostLiked:" + postId, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
     return postRedisService.getMemberFromRedis(set);
   }
@@ -78,6 +78,15 @@ public class LikeRedisService {
 
     for (LikePost likePost : likePostList) {
       likePost(likePost);
+    }
+  }
+
+  public boolean isLiked(String postId, String memberId) {
+    Long index =redisTemplate.opsForZSet().rank("ILike:" + memberId, postId);
+    if(index != null) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

@@ -19,6 +19,11 @@ public class Follow implements Serializable {
   @Id @NotBlank private String followingId;
   private Date followingTime;
 
+  public Follow(String memberId, String followingId) {
+    this.memberId = memberId;
+    this.followingId = followingId;
+  }
+
   public PK getId() {
     return new PK(memberId, followingId);
   }

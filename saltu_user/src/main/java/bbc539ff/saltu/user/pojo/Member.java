@@ -43,7 +43,7 @@ public class Member implements Serializable {
 
   @Min(value = 0, message = "memberFollowers bigger than 0")
   private Long memberFollowers;
-
+  private String memberBio;
   private Date memberBirthDate;
   private String memberPic;
   private String memberLocation;

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -63,6 +64,10 @@ public class MemberService {
 
   public Member findById(String memberId) {
     return memberDao.findById(memberId).get();
+  }
+
+  public Map<String, Object> findByIdFromRedis(String memberId) {
+    return memberRedisService.getMemberById(memberId);
   }
 
   public Member findByMemberName(String memberName) {

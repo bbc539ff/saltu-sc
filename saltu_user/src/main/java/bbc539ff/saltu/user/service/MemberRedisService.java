@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * structure:
@@ -56,6 +57,10 @@ public class MemberRedisService {
         "member:" + member.getMemberId(),
         "memberState",
         member.getMemberState() != null ? Integer.toString(member.getMemberState()) : "");
+      stringRedisConnection.hSet(
+              "member:" + member.getMemberId(),
+              "memberCreate",
+              member.getMemberCreate() != null ? Long.toString(member.getMemberCreate().getTime()) : "");
     stringRedisConnection.hSet(
         "member:" + member.getMemberId(), "LastLogin", Long.toString(System.currentTimeMillis()));
   }
@@ -85,5 +90,10 @@ public class MemberRedisService {
               }
               return null;
             });
+  }
+
+  public Map<String, Object> getMemberById(String memberId) {
+      Map map = redisTemplate.opsForHash().entries("member:"+memberId);
+      return map;
   }
 }

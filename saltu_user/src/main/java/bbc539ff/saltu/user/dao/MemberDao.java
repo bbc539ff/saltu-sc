@@ -15,4 +15,12 @@ public interface MemberDao extends JpaRepository<Member, String>, JpaSpecificati
   @Modifying
   @Query("UPDATE Member SET memberState = ?2 WHERE memberId = ?1")
   void updateMemberStateByMemberId(String memberId, Integer memberState);
+
+  @Modifying
+  @Query("UPDATE Member SET memberFollowers = memberFollowers+delta WHERE memberId = ?1")
+  void incMemberFollowersByMemberId(String memberId, Integer delta);
+
+  @Modifying
+  @Query("UPDATE Member SET memberFollowing = memberFollowing+delta WHERE memberId = ?1")
+  void incMemberFollowingByMemberId(String memberId, Integer delta);
 }

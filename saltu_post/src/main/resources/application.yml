@@ -12,6 +12,10 @@ spring:
         persistence:
           validation:
             mode: none
+  mvc:
+    static-path-pattern: /**
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:/home/yvo11/Workplace/saltu_upload/
 
 eureka:
   client:
@@ -30,3 +34,6 @@ jwt:
     secretKey: saltu
     ttl: 604800000 # 7 days
     prefix: Bearer
+
+upload:
+  path: /home/yvo11/Workplace/saltu_upload

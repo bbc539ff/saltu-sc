@@ -12,6 +12,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,48 +28,60 @@ import java.util.Arrays;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+  @Autowired private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+  @Autowired private UserDetailsService userDetailsService;
 
-    @Autowired
-    JwtUtil jwtUtil;
+  @Autowired JwtUtil jwtUtil;
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers()
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                //        .rememberMe()
-                //        .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil))
-                // Disabled CSRF
-                .csrf()
-                .disable()
-                .cors(Customizer.withDefaults())
-                // Handle exception.
-                .exceptionHandling()
-                .authenticationEntryPoint(new SimpleAuthenticationEntryPoint())
-                .accessDeniedHandler(new SimpleAccessDeniedHandler());
-    }
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http.authorizeRequests()
+        .antMatchers()
+        .permitAll()
+        .anyRequest()
+        .authenticated()
+        .and()
+        //        .rememberMe()
+        //        .and()
+        .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil))
+        // Disabled CSRF
+        .csrf()
+        .disable()
+        .cors(Customizer.withDefaults())
+        // Handle exception.
+        .exceptionHandling()
+        .authenticationEntryPoint(new SimpleAuthenticationEntryPoint())
+        .accessDeniedHandler(new SimpleAccessDeniedHandler());
+  }
 
-    @Bean
-    @Override
-    public UserDetailsService userDetailsServiceBean() throws Exception {
-        return super.userDetailsServiceBean();
-    }
+  @Override
+  public void configure(WebSecurity web) throws Exception {
+    web.ignoring()
+        .antMatchers(
+            "/**/*.js",
+            "/lang/*.json",
+            "/**/*.css",
+            "/**/*.js",
+            "/**/*.map",
+            "/**/*.html",
+            "/**/*.png",
+            "/**/*.jpg",
+            "/**/*.jpeg");
+  }
 
+  @Bean
+  @Override
+  public UserDetailsService userDetailsServiceBean() throws Exception {
+    return super.userDetailsServiceBean();
+  }
 
-    @Bean
-    @Override
-    protected AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
-    }
+  @Bean
+  @Override
+  protected AuthenticationManager authenticationManager() throws Exception {
+    return super.authenticationManager();
+  }
+
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
@@ -80,5 +93,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     source.registerCorsConfiguration("/**", configuration);
     return source;
   }
-
 }

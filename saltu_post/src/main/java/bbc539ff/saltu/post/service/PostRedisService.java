@@ -9,6 +9,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * structure:
@@ -30,6 +32,7 @@ public class PostRedisService {
   @Autowired StringRedisTemplate redisTemplate;
 
   public void addOnePost(StringRedisConnection stringRedisConnection, Post post) {
+      addHashTagInRedis(stringRedisConnection, post.getPostContent());
     stringRedisConnection.hSet("post:" + post.getPostId(), "postId", post.getPostId());
     stringRedisConnection.hSet("post:" + post.getPostId(), "memberId", post.getMemberId());
     stringRedisConnection.hSet("post:" + post.getPostId(), "postContent", post.getPostContent());
@@ -133,7 +136,7 @@ public class PostRedisService {
         redisTemplate
             .opsForZSet()
             .reverseRangeByScore(
-                "home:" + memberId, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 0, 10);
+                "home:" + memberId, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 0, 100);
     return getPostFromRedis(postSet);
   }
 
@@ -142,7 +145,7 @@ public class PostRedisService {
         redisTemplate
             .opsForZSet()
             .reverseRangeByScore(
-                "profile:" + memberId, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 0, 10);
+                "profile:" + memberId, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 0, 100);
 
     return getPostFromRedis(postSet);
   }
@@ -150,6 +153,7 @@ public class PostRedisService {
   public void loadingPostDataFromDatabase() {
     List<Post> postList = postDao.findAll();
     for (Post post : postList) {
+      if (post.getPostState() == 0) continue;
       addPostToRedis(post);
     }
   }
@@ -169,4 +173,36 @@ public class PostRedisService {
                 });
     return result;
   }
+
+  public void deletePostFromRedis(String postId) {
+    Object[] obj = redisTemplate.opsForHash().keys("post:" + postId).toArray();
+    redisTemplate.opsForHash().delete("post:" + postId, obj);
+  }
+
+  private static final Pattern hashtagPattern = Pattern.compile("#[^#]+#");
+  public List<String> getHashTag(String originalString) {
+      List<String> hashtagSet=new ArrayList<String>();
+      Matcher matcher = hashtagPattern.matcher(originalString);
+      while (matcher.find()) {
+//            int matchStart = matcher.start(1);
+          int matchStart = matcher.start();
+          int matchEnd = matcher.end();
+          String tmpHashtag=originalString.substring(matchStart,matchEnd);
+          hashtagSet.add(tmpHashtag);
+          originalString=originalString.replace(tmpHashtag,"");
+          matcher = hashtagPattern.matcher(originalString);
+      }
+      return hashtagSet;
+  }
+
+    public void addHashTagInRedis(StringRedisConnection stringRedisConnection, String postContent) {
+      List<String> hashTagList = getHashTag(postContent);
+      for(String hashTag : hashTagList) {
+          stringRedisConnection.zIncrBy("HashTag", 1, hashTag);
+      }
+    }
+
+    public Set<String> getTop10HashTag() {
+      return redisTemplate.opsForZSet().reverseRangeByScore("HashTag", Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+    }
 }

@@ -41,6 +41,12 @@ public class MemberController {
     return Result.success(member);
   }
 
+  @GetMapping("/c/{memberId}")
+  public Result findByMemberIdFromRedis(@PathVariable String memberId) {
+    Map<String, Object> map = memberService.findByIdFromRedis(memberId);
+    return Result.success(map);
+  }
+
   @RequestMapping(path = "", method = RequestMethod.POST)
   public Result addMember(@RequestBody Member member) {
     memberService.saveOne(member);

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -27,7 +28,10 @@ public class FollowService {
     Member member = memberDao.findById(follow.getMemberId()).orElse(null);
     Member following = memberDao.findById(follow.getFollowingId()).orElse(null);
     followerRedisService.followOne(follow);
-    if (member != null && following != null) return followDao.save(follow);
+    if (member != null && following != null) {
+      memberDao.incMemberFollowingByMemberId(member.getMemberId(), 1);
+      return followDao.save(follow);
+    }
     else return null;
   }
 
@@ -37,12 +41,19 @@ public class FollowService {
             .findById(new Follow.PK(follow.getMemberId(), follow.getFollowingId()))
             .orElse(null);
     followerRedisService.unFollowOne(follow);
-    log.info("deleting follow: " + follow);
     if (follow != null) {
       followDao.delete(follow);
       return true;
     } else {
       return false;
     }
+  }
+
+  public List<Map<String, Object>> getFollowerList(String memberId) {
+    return followerRedisService.getFollower(memberId);
+  }
+
+  public List<Map<String, Object>> getFollowingList(String memberId) {
+    return followerRedisService.getFollowing(memberId);
   }
 }
